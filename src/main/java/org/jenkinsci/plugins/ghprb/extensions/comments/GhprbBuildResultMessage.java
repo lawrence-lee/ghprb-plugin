@@ -6,6 +6,11 @@ import hudson.model.Descriptor;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.ListBoxModel;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
+
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.ghprb.Ghprb;
 import org.jenkinsci.plugins.ghprb.extensions.GhprbCommentAppender;
@@ -58,7 +63,29 @@ public class GhprbBuildResultMessage extends AbstractDescribableImpl<GhprbBuildR
                 msg.append(message);
                 msg.append("\n");
             }
+
+            try (InputStream logInputStream = build.getLogInputStream();
+            		
+            		Scanner scanner = new Scanner(logInputStream) ){
+            	
+            	while (scanner.hasNextLine()) {
+            		String line = scanner.nextLine();
+            		
+            		if(line.contains("gradle.com/s")) {
+            			
+            			msg.append("\n");
+            			msg.append("Link to build scan: " + line);
+            			
+            			break;
+            		}
+            		
+            	}
+            	
+            } catch (IOException ioe) {
+            	ioe.printStackTrace();
+            }
         }
+
         return msg.toString();
     }
 
