@@ -69,16 +69,17 @@ public class GhprbBuildResultMessage extends AbstractDescribableImpl<GhprbBuildR
             		Scanner scanner = new Scanner(logInputStream) ){
             	
             	while (scanner.hasNextLine()) {
-            		String line = scanner.nextLine();
+            		String currentLine = scanner.nextLine();
             		
-            		if(line.contains("gradle.com/s")) {
+            		if(currentLine.equals("Publishing build scan...")) {
+            			String urlLine = scanner.next();
             			
             			msg.append("\n");
-            			msg.append("Link to build scan: " + line);
+            			msg.append("Link to build scan: " + urlLine);
             			
-            			break;
+            			break;            			
             		}
-            		
+                       		
             	}
             	
             } catch (IOException ioe) {
