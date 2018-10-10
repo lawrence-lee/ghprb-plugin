@@ -66,21 +66,22 @@ public class GhprbBuildResultMessage extends AbstractDescribableImpl<GhprbBuildR
 
             try (InputStream logInputStream = build.getLogInputStream();
             		
-            		Scanner scanner = new Scanner(logInputStream) ){
+        		Scanner scanner = new Scanner(logInputStream) ){
             	
+            	String comment = null;
+            	            	            	
             	while (scanner.hasNextLine()) {
             		String currentLine = scanner.nextLine();
             		
-            		if(currentLine.equals("Publishing build scan...")) {
+            		if (currentLine.contains("Publishing build scan...")) {
             			String urlLine = scanner.next();
             			
-            			msg.append("\n");
-            			msg.append("Link to build scan: " + urlLine);
-            			
-            			break;            			
+            			comment = "Link to build scan: " + urlLine;            			         			
             		}
                        		
             	}
+    			msg.append("\n");
+    			msg.append(comment);
             	
             } catch (IOException ioe) {
             	ioe.printStackTrace();
